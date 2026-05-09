@@ -1,2 +1,3 @@
-let calculator = new calcController;
+window.calculator = new CalcController;
 calculator.initialize();
+
