@@ -8,30 +8,36 @@ class CalcController{
 
         this._locale = ('pt-BR');
         this._currentDate;
-
+        this._initButtonsEvent;
 
     }
 
 
     initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
-
+    this.initButtonsEvent();
         
-
-
-        this.displayDate = this.currentDate.toLocaleDateString(this._locale); 
-        this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
     
-    
+    this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
         setInterval(()=>
                 {
-                    this.displayDate = this.currentDate.toLocaleDateString(this._locale); //chamamos o setter displayDate e atribuimos o mesmo valor 
-                    this.displayTime = this.currentDate.toLocaleTimeString(this._locale); // que se encontra no get do currentDate, mas coletando apenas o Date/Time
-                },1000);
+                     this.setDateTime()
+                },1000);  
+    }
+
+    initButtonsEvent(){
         
-        
-        
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // atribui a variavel buttons o conjunto de elementos g, no ramo #buttons e #parts
+        buttons.forEach((btn,index)=>{ //declaração da função forEach, que percorre o array em busca do valor "btn"
+                btn.addEventListener('click', e => { // cada vez que o forEach encontrar um btn, ele atribui o metodo EventListener para ele
+                    console.log(btn.className.baseVal.replace("btn-", ""));
+                })
+        })
+    }
     
     
+    setDateTime(){
+        this.displayDate = this.currentDate.toLocaleDateString(this._locale); //chamamos o setter displayDate e atribuimos nele o mesmo valor  
+        this.displayTime = this.currentDate.toLocaleTimeString(this._locale); // que se encontra no get currentDate, porém especifincando apenas o time e date
     }
 
     get displayCalc(){
@@ -66,7 +72,7 @@ class CalcController{
     }
 
 
-    get currentDate(){
+    get currentDate(){ // Busca a data e hora atual
         return this._currentDate = new Date;
     }
 
