@@ -15,7 +15,7 @@ class CalcController{
 
     initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
     this.initButtonsEvent();
-        
+    
     
     this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
         setInterval(()=>
@@ -24,13 +24,33 @@ class CalcController{
                 },1000);  
     }
 
+
+
+    addEventListenerAll(element, events, fn){ // função para o EventListener funcionar em mais de um evento
+    //                                              recebe o elemento, os eventos a serem trabalhados, e a função a ser executada
+
+        events.split(' ').forEach(event => {
+        
+            element.addEventListener(event, fn, false);
+
+
+        })
+    }
+
+
     initButtonsEvent(){
         
         let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // atribui a variavel buttons o conjunto de elementos g, no ramo #buttons e #parts
-        buttons.forEach((btn,index)=>{ //declaração da função forEach, que percorre o array em busca do valor "btn"
-                btn.addEventListener('click', e => { // cada vez que o forEach encontrar um btn, ele atribui o metodo EventListener para ele
+//                                                                           //declaração da função forEach, que percorre o array em busca do valor "btn"                                                                             
+        buttons.forEach((btn,index)=>{  
+
+                this.addEventListenerAll(btn, 'click drag', e => { // cada vez que o forEach encontrar um btn, ele atribui o metodo EventListener para ele
+                    
                     console.log(btn.className.baseVal.replace("btn-", ""));
                 })
+            this.addEventListenerAll(btn, "mouseover mouseup mousedown", e => {
+                btn.style.cursor = "pointer";
+            })
         })
     }
     
