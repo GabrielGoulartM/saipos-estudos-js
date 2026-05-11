@@ -1,20 +1,22 @@
 class CalcController{
     constructor(){
 
-        
-        this._displayCalcEl = document.querySelector("#display"); // --> Aqui, estamos salvando o objeto HTML DISPLAY inteiro.
+        this._operation = []; // Variavel a ser exibida no display
+
+        this._displayCalcEl = document.querySelector("#display"); // --> Aqui, estamos salvando o objeto 'HTML DISPLAY' inteiro.
         this._dateCalcEl = document.querySelector("#data");
         this._timeCalcEl = document.querySelector("#hora");
 
         this._locale = ('pt-BR');
         this._currentDate;
-        this._initButtonsEvent;
+        
 
     }
 
 
     initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
     this.initButtonsEvent();
+
     
     
     this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
@@ -24,30 +26,102 @@ class CalcController{
                 },1000);  
     }
 
+    clearAll(){
+        this._operation = [];   
+     }
+
+    clearEntry(){
+        this._operation.pop() //joga fora o ultimo valor do array
+    }
+
+    setError(){
+
+        this.displayCalc = "error"; // chama o setter DisplayCalc
+
+    }
+
+    addOperation(valor){
+        this._operation.push(valor);
+        console.log(this._operation);
+    }
+
+    execBtn(valor){
+        switch(valor){
+
+            case 'ac':
+                this.clearAll();
+                break;
+                
+            case 'ce':
+                this.clearEntry();
+                break;
+            
+            case 'soma':
+                
+                break;
+            case 'subtracao':
+                
+                break;
+
+            case 'divisao':
+                
+                break;
+        
+            case 'multiplicacao':
+                
+                break;
+            
+            case 'porcento':
+                
+                break;
+            
+            case 'igual':
+                
+                break;
+            
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                this.addOperation(parseInt(valor)); //parseInt converte de uma string, para um numero
+                break;
+                default:
+                    this.setError();
+                    break;
+            }
+    }
 
 
-    addEventListenerAll(element, events, fn){ // função para o EventListener funcionar em mais de um evento
+
+    addEventListenerAll(element, events, fn){ // --> função para o EventListener funcionar em mais de um evento
     //                                              recebe o elemento, os eventos a serem trabalhados, e a função a ser executada
 
-        events.split(' ').forEach(event => {
-        
+        events.split(' ').forEach(event => { // events chega como uma string, o método .split separa em arrays a cada espaço, ficando "click, drag "
+//                                               Em seguida, para cada array que foi splitado, o repetidor forEach atribui o EventListener correspondende, junto com a função       
             element.addEventListener(event, fn, false);
-
-
         })
     }
 
 
     initButtonsEvent(){
         
-        let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // atribui a variavel buttons o conjunto de elementos g, no ramo #buttons e #parts
-//                                                                           //declaração da função forEach, que percorre o array em busca do valor "btn"                                                                             
-        buttons.forEach((btn,index)=>{  
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // Atribui a variavel buttons o conjunto de elementos g, no ramo #buttons e #parts
+                                                                             
+        buttons.forEach((btn,index)=>{  // Percorre a variavel button, procurando por elementos que contenha a informação 'btn'
 
-                this.addEventListenerAll(btn, 'click drag', e => { // cada vez que o forEach encontrar um btn, ele atribui o metodo EventListener para ele
+                this.addEventListenerAll(btn, 'click drag', e => { // Chama a função ListenerAll, e atribui seus parametros
                     
-                    console.log(btn.className.baseVal.replace("btn-", ""));
+                    //console.log(btn.className.baseVal.replace("btn-", ""));   //printa para cada botão o seu numero, excluindo a informação "btn"
+                    let textBtn = btn.className.baseVal.replace("btn-","");     // cria uma variavel, e atribui apenas o texto do botão
+                   this.execBtn(textBtn); 
                 })
+
             this.addEventListenerAll(btn, "mouseover mouseup mousedown", e => {
                 btn.style.cursor = "pointer";
             })
