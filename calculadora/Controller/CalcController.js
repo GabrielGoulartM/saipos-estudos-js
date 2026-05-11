@@ -40,8 +40,41 @@ class CalcController{
 
     }
 
-    addOperation(valor){
-        this._operation.push(valor);
+    getLastOperation(){
+        return this._operation[this._operation.length-1];
+    }
+
+    setLastOperation(valor){
+        this._operation[this._operation.length - 1] = valor;
+    }
+
+    isOperator(valor){
+        return (['+', '-', '*', '%', '/'].indexOf(valor) > -1);
+    }
+    
+    addOperation(valor){ // Método para adicionar operador no array .operation
+
+        if (isNaN(this.getLastOperation())){  //Se não é um número
+
+            if(this.isOperator(valor)){ 
+                // verifica se é um operador que esta na calculadora
+                
+                this.setLastOperation(valor);
+
+            }else if(isNaN(valor)){
+
+                console.log(valor);
+            } else{
+                this._operation.push(valor);
+            }
+
+            
+        }else{
+            let novoValor = this.getLastOperation().toString() + valor.toString();
+            this.setLastOperation(parseInt(novoValor));
+        }
+
+        
         console.log(this._operation);
     }
 
@@ -57,27 +90,31 @@ class CalcController{
                 break;
             
             case 'soma':
-                
+                this.addOperation('+');
                 break;
             case 'subtracao':
-                
+                this.addOperation('-');
                 break;
 
             case 'divisao':
-                
+                this.addOperation('/');
                 break;
         
             case 'multiplicacao':
-                
+                this.addOperation('*');
                 break;
             
             case 'porcento':
-                
+                this.addOperation('%');
                 break;
             
             case 'igual':
                 
                 break;
+
+            case '.':
+
+            break;
             
             case '0':
             case '1':
