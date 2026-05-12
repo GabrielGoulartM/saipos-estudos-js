@@ -52,30 +52,51 @@ class CalcController{
         return (['+', '-', '*', '%', '/'].indexOf(valor) > -1);
     }
     
+    pushOperation(valor){
+        this._operation.push(valor);
+        
+        if (this._operation.length > 3){
+
+            let last = this._operation.pop();
+            console.log(this._operation);
+        }
+    }
+
     addOperation(valor){ // Método para adicionar operador no array .operation
 
-        if (isNaN(this.getLastOperation())){  //Se não é um número
+            console.log("A", valor, isNaN(this.getLastOperation()));
+        if (isNaN(this.getLastOperation())){  // Verifica Se o ultimo valor do array é um numero
 
-            if(this.isOperator(valor)){ 
-                // verifica se é um operador que esta na calculadora
+            if(this.isOperator(valor)){  // Se de fato não for um numero, ira entrar nesse laço e será verificado se o caractereé um operador valido da calculadora
+               
                 
-                this.setLastOperation(valor);
+                this.setLastOperation(valor); //Se for um operador valido, entra no array
 
-            }else if(isNaN(valor)){
+            }else if(isNaN(valor)){ // --> Aviso que o caractere digitado não é um alagarismo, nem um operador 
 
-                console.log(valor);
-            } else{
-                this._operation.push(valor);
+                console.log("FOI INSERIDO UM DIGITO INVALIDO");
+            } 
+            else
+                {
+                this.pushOperation(valor); //Se ele passou por tudo isso, sõ pode ser um algarismo
             }
 
             
         }else{
-            let novoValor = this.getLastOperation().toString() + valor.toString();
-            this.setLastOperation(parseInt(novoValor));
+            if(this.isOperator(valor)){ // Se, na ultima posição do array for um numero, inseri o operador no array
+               
+                this.pushOperation(valor); 
+
+            }
+            else{ // Se chegou aqui, é um algarismo, e deve ser
+                let novoValor = this.getLastOperation().toString() + valor.toString(); // --> Transforma o ultimo algarismo no array em string, e concatena com o novo valor
+                this.setLastOperation(parseInt(novoValor)); // Transforma de string, para int, para poder realizar transformações algebricas/
+            }
+            
         }
 
         
-        console.log(this._operation);
+       
     }
 
     execBtn(valor){
