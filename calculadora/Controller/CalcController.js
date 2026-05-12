@@ -57,9 +57,35 @@ class CalcController{
         
         if (this._operation.length > 3){
 
-            let last = this._operation.pop();
-            console.log(this._operation);
+            
+
+            this.calc();
+
+            
         }
+    }
+
+    calc(){
+        let last = this._operation.pop();
+        
+        let result = eval(this._operation.join(""));
+
+        this._operation = [result, last];
+
+        this.setLastNumberToDisplay();
+    }
+
+
+    setLastNumberToDisplay(){
+        let lastNumber;
+        for(let i = this._operation.length - 1; i>=0; i--){
+            if(!this.isOperator(this._operation[i])){
+                lastNumber = this._operation[i];
+                break;
+            }
+        }
+
+        this.displayCalc = lastNumber;
     }
 
     addOperation(valor){ // Método para adicionar operador no array .operation
@@ -79,6 +105,7 @@ class CalcController{
             else
                 {
                 this.pushOperation(valor); //Se ele passou por tudo isso, sõ pode ser um algarismo
+                this.setLastNumberToDisplay();
             }
 
             
@@ -90,7 +117,9 @@ class CalcController{
             }
             else{ // Se chegou aqui, é um algarismo, e deve ser
                 let novoValor = this.getLastOperation().toString() + valor.toString(); // --> Transforma o ultimo algarismo no array em string, e concatena com o novo valor
-                this.setLastOperation(parseInt(novoValor)); // Transforma de string, para int, para poder realizar transformações algebricas/
+                this.setLastOperation(parseInt(novoValor)); // Transforma de string, para int, para poder realizar transformações algebricas
+
+                this.setLastNumberToDisplay();
             }
             
         }
