@@ -67,32 +67,31 @@ class CalcController{
         }
     }
 
-    // ✅ Correto
-calc(){
-    let last = '';
+    calc(){
+        if(this._operation.lenght > 3){
+        let last = this._operation.pop();
+        }
+        let result = eval(this._operation.join("")); // Eval calcula a expressão, independente do tipo da variavel, .join junta as expressões
 
-    // Garante que há operação suficiente para calcular
-    if (this._operation.length < 2) return;
 
-    last = this._operation[this._operation.length - 1];
+        if(last == "%"){
+            result = result / 100;
+            this._operation = [result];
+        }else{
+            
 
-    // Se o último item for operador, remove antes de calcular
-    if (this.isOperator(last)) {
-        this._operation.pop();
-        last = '';
+             this._operation = [result];
+
+             if(last){
+                this._operation.push(last);
+             }
+        }
+
+
+        
+
+        this.setLastNumberToDisplay();
     }
-
-    let result = eval(this._operation.join(""));
-
-    if (last == "%") {
-        result = result / 100;
-        this._operation = [result];
-    } else {
-        this._operation = [result];
-    }
-
-    this.setLastNumberToDisplay();
-}
 
 
     setLastNumberToDisplay(){
