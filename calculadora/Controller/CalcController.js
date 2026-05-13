@@ -16,7 +16,7 @@ class CalcController{
 
     initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
     this.initButtonsEvent();
-
+    this.setLastNumberToDisplay();
     
     
     this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
@@ -28,10 +28,12 @@ class CalcController{
 
     clearAll(){
         this._operation = [];   
+        this.setLastNumberToDisplay();
      }
 
     clearEntry(){
         this._operation.pop() //joga fora o ultimo valor do array
+        this.setLastNumberToDisplay();
     }
 
     setError(){
@@ -65,27 +67,48 @@ class CalcController{
         }
     }
 
-    calc(){
-        let last = this._operation.pop();
-        
-        let result = eval(this._operation.join(""));
+    // ✅ Correto
+calc(){
+    let last = '';
 
-        this._operation = [result, last];
+    // Garante que há operação suficiente para calcular
+    if (this._operation.length < 2) return;
 
-        this.setLastNumberToDisplay();
+    last = this._operation[this._operation.length - 1];
+
+    // Se o último item for operador, remove antes de calcular
+    if (this.isOperator(last)) {
+        this._operation.pop();
+        last = '';
     }
+
+    let result = eval(this._operation.join(""));
+
+    if (last == "%") {
+        result = result / 100;
+        this._operation = [result];
+    } else {
+        this._operation = [result];
+    }
+
+    this.setLastNumberToDisplay();
+}
 
 
     setLastNumberToDisplay(){
         let lastNumber;
-        for(let i = this._operation.length - 1; i>=0; i--){
-            if(!this.isOperator(this._operation[i])){
+        for(let i = this._operation.length - 1; i>=0; i--){  // percorre o array de trás para frente
+            if(!this.isOperator(this._operation[i])){  // Se, na posição i do array não for um operador, defini o LastNumber como o valor no index i
                 lastNumber = this._operation[i];
                 break;
             }
         }
 
-        this.displayCalc = lastNumber;
+        
+     if(!lastNumber){
+        lastNumber = 0;
+     }
+        this.displayCalc = lastNumber; // exibi no display o ultimo numero do array
     }
 
     addOperation(valor){ // Método para adicionar operador no array .operation
@@ -159,7 +182,7 @@ class CalcController{
                 break;
             
             case 'igual':
-                
+                this.calc();
                 break;
 
             case '.':
