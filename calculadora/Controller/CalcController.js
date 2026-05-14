@@ -30,7 +30,11 @@ class CalcController{
 
     clearAll(){
         this._operation = [];   // defini o array como vazio 
-        this.setLastNumberToDisplay(); // Chama 
+        this._lastNumber = "";
+        this._lastOperador = "";
+
+        this.setLastNumberToDisplay();
+      
      }
 
     clearEntry(){
@@ -45,7 +49,7 @@ class CalcController{
     }
 
     getLastOperation(){
-        return this._operation[this._operation.length-1];
+        return this._operation[this._operation.length-1]; // Olha o valor no ultimo index do Array
     }
 
     setLastOperation(valor){
@@ -58,13 +62,13 @@ class CalcController{
     }
     
     pushOperation(valor){
-        this._operation.push(valor);
+        this._operation.push(valor); //Insere valor no Array
         
-        if (this._operation.length > 3){
+        if (this._operation.length > 3){ // Verifica se ja tem digitos o suficiente para realizar o calculo
 
             
 
-            this.calc();
+            this.calc(); // Se tiver, chama o método de calculo
 
             
         }
@@ -119,7 +123,17 @@ class CalcController{
     }
 
 
+    addDot(){
+        let LastOperation = this.getLastOperation(); 
+        if(this.isOperator(LastOperation)|| !LastOperation){ // Se LastOperation for um operador, OU, é undefined
+            this.pushOperation('0.');
+        } else {
+            this.setLastOperation(LastOperation.toString() + ".");
+        }
 
+        this.setLastNumberToDisplay();
+    }
+    
 
     getResult(){
         return eval(this._operation.join("")); // Eval calcula a expressão, independente do tipo da variavel, .join junta as expressões
@@ -141,7 +155,7 @@ class CalcController{
                     }
             } 
             if(!lastItem){
-                lastItem = {isOperator} ? this._lastOperador : this._lastNumber; // (?) isso ficou bem confuso, me aprofundarei mais depois
+                lastItem = this.isOperator() ? this._lastOperador : this._lastNumber; // condição : TRUE : FALSE
             }
             return lastItem;
             }
@@ -172,10 +186,7 @@ class CalcController{
                 
                 this.setLastOperation(valor); //Se for um operador valido, entra no array
 
-            }else if(isNaN(valor)){ // --> Aviso que o caractere digitado não é um alagarismo, nem um operador 
-
-                console.log("FOI INSERIDO UM DIGITO INVALIDO");
-            } 
+            }
             else
                 {
                 this.pushOperation(valor); //Se ele passou por tudo isso, sõ pode ser um algarismo
@@ -191,7 +202,7 @@ class CalcController{
             }
             else{ // Se chegou aqui, é um algarismo, e deve ser
                 let novoValor = this.getLastOperation().toString() + valor.toString(); // --> Transforma o ultimo algarismo no array em string, e concatena com o novo valor
-                this.setLastOperation(parseInt(novoValor)); // Transforma de string, para int, para poder realizar transformações algebricas
+                this.setLastOperation(parseFloat(novoValor)); // Transforma de string, para int, para poder realizar transformações algebricas
 
                 this.setLastNumberToDisplay();
             }
@@ -207,6 +218,7 @@ class CalcController{
 
             case 'ac':
                 this.clearAll();
+               
                 break;
                 
             case 'ce':
@@ -236,7 +248,9 @@ class CalcController{
                 this.calc();
                 break;
 
-            case '.':
+            case 'ponto':
+                this.addDot();
+                break;
 
             break;
             
@@ -252,7 +266,8 @@ class CalcController{
             case '9':
                 this.addOperation(parseInt(valor)); //parseInt converte de uma string, para um numero
                 break;
-                default:
+            
+            default:
                     this.setError();
                     break;
             }
