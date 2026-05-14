@@ -15,10 +15,74 @@ class CalcController{
 
     }
 
+    initKeyboard(){
+        document.addEventListener('keyup', e=>{
+            console.log(e.key);
+            switch(e.key){
+
+            case 'Escape':
+                this.clearAll();
+               
+                break;
+                
+            case 'Backspace':
+                this.clearEntry();
+                break;
+            
+            case '+':
+                this.addOperation('+');
+                break;
+            case '-':
+                this.addOperation('-');
+                break;
+
+            case '/':
+                this.addOperation('/');
+                break;
+        
+            case '*':
+                this.addOperation('*');
+                break;
+            
+            case '%':
+                this.addOperation('%');
+                break;
+
+            case '=':
+            case 'Enter':
+                this.calc();
+                break;
+
+            case ',':
+            case 'ponto':
+            case '.':
+                this.addDot();
+                break;
+
+            break;
+            
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                this.addOperation(parseInt(e.key)); //parseInt converte de uma string, para um numero
+                break;
+            
+            
+            }
+        });
+    }
 
     initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
     this.initButtonsEvent();
     this.setLastNumberToDisplay();
+    this.initKeyboard();
     
     
     this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
