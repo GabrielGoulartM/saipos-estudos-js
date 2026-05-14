@@ -125,6 +125,9 @@ class CalcController{
 
     addDot(){
         let LastOperation = this.getLastOperation(); 
+
+        if(typeof LastOperation === 'string' && LastOperation.split('').indexof('.') > -1);
+
         if(this.isOperator(LastOperation)|| !LastOperation){ // Se LastOperation for um operador, OU, é undefined
             this.pushOperation('0.');
         } else {
@@ -202,7 +205,7 @@ class CalcController{
             }
             else{ // Se chegou aqui, é um algarismo, e deve ser
                 let novoValor = this.getLastOperation().toString() + valor.toString(); // --> Transforma o ultimo algarismo no array em string, e concatena com o novo valor
-                this.setLastOperation(parseFloat(novoValor)); // Transforma de string, para int, para poder realizar transformações algebricas
+                this.setLastOperation(novoValor); // Transforma de string, para int, para poder realizar transformações algebricas
 
                 this.setLastNumberToDisplay();
             }
