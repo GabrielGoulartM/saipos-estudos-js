@@ -2,6 +2,8 @@ class CalcController{
     constructor(){
 
         this._operation = []; // Variavel a ser exibida no display
+        this._lastOperador = ''; //variavel que defini o ultimo operador do display
+        this._lastNumber = ''; // variavel que defini o ultimo caractere do display
 
         this._displayCalcEl = document.querySelector("#display"); // --> Aqui, estamos salvando o objeto 'HTML DISPLAY' inteiro.
         this._dateCalcEl = document.querySelector("#data");
@@ -27,8 +29,8 @@ class CalcController{
     }
 
     clearAll(){
-        this._operation = [];   
-        this.setLastNumberToDisplay();
+        this._operation = [];   // defini o array como vazio 
+        this.setLastNumberToDisplay(); // Chama 
      }
 
     clearEntry(){
@@ -50,7 +52,8 @@ class CalcController{
         this._operation[this._operation.length - 1] = valor;
     }
 
-    isOperator(valor){
+    //.indexOf procura o item dentro do array de caracteres, se encontrar, retorna true
+    isOperator(valor){ 
         return (['+', '-', '*', '%', '/'].indexOf(valor) > -1);
     }
     
@@ -68,11 +71,33 @@ class CalcController{
     }
 
     calc(){
-        if(this._operation.lenght > 3){
-        let last = this._operation.pop();
-        }
-        let result = eval(this._operation.join("")); // Eval calcula a expressão, independente do tipo da variavel, .join junta as expressões
+        let last = "";
+        let result = "";
 
+        if(this._operation.length < 3){
+            let firstItem = this._operation[0];
+            this._operation = [firstItem, this._lastOperador, this._lastNumber];
+        }
+
+
+
+        this._lastOperador= this.getLastitem(); // pega o ultimo operador, e atribui a lastOperator
+
+        if(this._operation.length > 3){
+         last = this._operation.pop(); // se o array for maior que 3, ultimo digito cai fora
+        
+         
+         this._lastNumber = this.getResult(); //pega o ultimo resultado, e atribui a lastNumber
+        }   else if(this._operation.length == 3){
+
+        
+        this._lastNumber = this.getLastitem(false); // atribui ao LastNumber, o resultado do array
+        }
+
+        console.log("._lastOperator", this._lastOperador);
+        console.log("._lastNumber", this._lastNumber);
+
+        result = this.getResult();
 
         if(last == "%"){
             result = result / 100;
@@ -94,14 +119,41 @@ class CalcController{
     }
 
 
-    setLastNumberToDisplay(){
-        let lastNumber;
+
+
+    getResult(){
+        return eval(this._operation.join("")); // Eval calcula a expressão, independente do tipo da variavel, .join junta as expressões
+
+    }
+
+    getLastitem(digit = true){ // --> Se chamar o método com argmnts vazio {}, procurando por operador,
+        // se passar (false), procura por um numero
+        let lastItem; //variavel de escopo local, tem que retornar ela ao global usando return
+        
         for(let i = this._operation.length - 1; i>=0; i--){  // percorre o array de trás para frente
-            if(!this.isOperator(this._operation[i])){  // Se, na posição i do array não for um operador, defini o LastNumber como o valor no index i
-                lastNumber = this._operation[i];
-                break;
+           
+           
+                    // Se na posição do index i for um operador, retorna true, este true sera comparado o digit, se bater, definir lastItem como o operador do display
+                    // Se não bater, o valor na posição index i é um numero
+                if(this.isOperator(this._operation[i]) == digit){  
+                    lastItem = this._operation[i];
+                    break;
+                    }
+            } 
+            if(!lastItem){
+                lastItem = {isOperator} ? this._lastOperador : this._lastNumber; // (?) isso ficou bem confuso, me aprofundarei mais depois
             }
-        }
+            return lastItem;
+            }
+        
+
+    
+
+
+
+    setLastNumberToDisplay(){
+        let lastNumber = this.getLastitem(false);
+        
 
         
      if(!lastNumber){
