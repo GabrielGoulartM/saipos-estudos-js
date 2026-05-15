@@ -15,6 +15,25 @@ class CalcController{
 
     }
 
+    
+
+    initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
+    this.initButtonsEvent();
+    this.setLastNumberToDisplay();
+    this.initKeyboard();
+    this.pasteFromClipboard();
+    
+    
+    
+
+    this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
+        setInterval(()=>
+                {
+                     this.setDateTime()
+                },1000);  
+    }
+
+    
     initKeyboard(){
         document.addEventListener('keyup', e=>{
             console.log(e.key);
@@ -59,7 +78,10 @@ class CalcController{
                 this.addDot();
                 break;
 
-            break;
+            case 'c':
+                if(e.ctrlKey){
+                    this.copyToClipboard();}
+                break;
             
             case '0':
             case '1':
@@ -78,18 +100,29 @@ class CalcController{
             }
         });
     }
+    
+    
+    
+    copyToClipboard(){
+        let input = document.createElement('input');
 
-    initialize(){ // tudo neste bloco, inicia assim que a pagina carrega
-    this.initButtonsEvent();
-    this.setLastNumberToDisplay();
-    this.initKeyboard();
-    
-    
-    this.setDateTime() // --> Assim que carrega a pagina, seta o horário e data no display
-        setInterval(()=>
-                {
-                     this.setDateTime()
-                },1000);  
+        input.value = this.displayCalc;
+
+        document.body.appendChild(input);
+
+        input.select();
+
+        document.execCommand("Copy");
+
+        input.remove();
+    }
+
+    pasteFromClipboard(){
+        document.addEventListener('paste', e=>{
+            let text = e.clipboardData.getData('Text');
+            this.displayCalc = parseFloat(text);
+            onsole.log(text);
+        })
     }
 
     clearAll(){
