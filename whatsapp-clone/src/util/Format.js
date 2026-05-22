@@ -1,10 +1,15 @@
 class Format{
     static getCamelCase(text){
 
-        let div = document.createElement('div');
+        // cria um div "fake"
+        let div = document.createElement('div'); 
 
-        div.innerHTML = `<div data-${text}="id">/</div>`;
+        // O navegador automaticamente converte para 
+        // camelCase quando acessa via .dataset, então ".data-caixa-mensagens" vira dataset.caixaMensagens
+        div.innerHTML = `<div data-${text}="id">/</div>`; 
 
-        return Object.keys(div.firstChild.dataset)[0];
+        // Pega o nome da primeira propriedade
+        return Object.keys(div.firstChild.dataset)[0];   // por exemplo: caixaMensagens
+       
     }
 }
