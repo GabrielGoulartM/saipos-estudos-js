@@ -172,6 +172,7 @@ class WhatsAppController {
       });
     });
 
+    // Evento de clicar no clip de anexar itens na conversa
     this.el.btnAttach.on("click", (e) => {
       e.stopPropagation();
       this.el.menuAttach.addClass("open");
@@ -179,11 +180,27 @@ class WhatsAppController {
     });
 
     this.el.btnAttachPhoto.on("click", (e) => {
-      console.log("Photo");
+      this.el.inputPhoto.click();
+    });
+
+    this.el.inputPhoto.on("click", (e) => {
+      console.log(this.el.inputPhoto.files);
+      [...this.el.inputPhoto.files].forEach((file) => {
+        console.log(file);
+      });
     });
 
     this.el.btnAttachCamera.on("click", (e) => {
-      console.log("Camera");
+      this.el.panelMessagesContainer.hide();
+      this.el.panelCamera.addClass("open");
+      this.el.panelCamera.css({
+        height: "calc(100% - 120px)",
+      });
+    });
+
+    this.el.btnClosePanelCamera.on("click", (e) => {
+      this.el.panelCamera.removeClass("open");
+      this.el.panelMessagesContainer.show();
     });
 
     this.el.btnAttachDocument.on("click", (e) => {
