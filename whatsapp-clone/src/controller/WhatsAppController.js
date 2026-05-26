@@ -70,10 +70,12 @@ class WhatsAppController {
       return this.classList.contains(name);
     };
 
+    // Método para captura dos dados via FormData
     HTMLFormElement.prototype.getForm = function () {
       return new FormData(this);
     };
 
+    // Converte FormaData para JSON
     HTMLFormElement.prototype.toJSON = function () {
       let json = {};
 
@@ -84,15 +86,23 @@ class WhatsAppController {
     };
   }
 
+  // Fecha os painéis a esquerda
   closeAllLeftPanel() {
     this.el.panelAddContact.hide();
     this.el.panelEditProfile.hide();
   }
 
+  // Força o fechamento do menu de attachment
+  closeMenuAttach(e) {
+    document.removeEventListener("click", this.closeMenuAttach);
+    this.el.menuAttach.removeClass("open");
+    console.log("MENU REMOVIDO");
+  }
+
   initEvents() {
     // Interações com o painel de MINHA FOTO
     this.el.myPhoto.on("click", (e) => {
-      //Atribui evento click no iconde de MINHA FOTO
+      //Atribui evento 'click' no icone de MINHA FOTO
 
       this.closeAllLeftPanel(); //Garante que os paineis a esquerda estão fechados
 
@@ -136,14 +146,52 @@ class WhatsAppController {
       }
     });
 
-    //Evento de click no botão de confirma
+    //Evento de click no botão de confirmar editar nome de perfil
     this.el.btnSavePanelEditProfile.on("click", (e) => {
       console.log(this.el.inputNamePanelEditProfile.innerHTML); // printa o valor dentro do elemento HTML
     });
 
+    // Faz a captura do dado via FormData
     this.el.formPanelAddContact.on("submit", (e) => {
       e.preventDefault();
       let formData = new FormData(this.el.formPanelAddContact);
+    });
+
+    //Evento de clicar no contato, e aparecer a conversa
+    this.el.contactsMessagesList.querySelectorAll(".contact-item").forEach((item) => {
+      // procura dentro de contactsMessagesLista os itens que tenham a classe CSS correspondente
+      item.on("click", (e) => {
+        // para cada item com a classe contact-item, atribui o evento click
+
+        this.el.home.hide(); // Ao clicar, o home é ocultado
+
+        this.el.main.css({
+          // Ao clicar, mostra a tela principal, que está configurada para flex
+          display: "flex",
+        });
+      });
+    });
+
+    this.el.btnAttach.on("click", (e) => {
+      e.stopPropagation();
+      this.el.menuAttach.addClass("open");
+      document.addEventListener("click", this.closeMenuAttach.bind(this));
+    });
+
+    this.el.btnAttachPhoto.on("click", (e) => {
+      console.log("Photo");
+    });
+
+    this.el.btnAttachCamera.on("click", (e) => {
+      console.log("Camera");
+    });
+
+    this.el.btnAttachDocument.on("click", (e) => {
+      console.log("Document");
+    });
+
+    this.el.btnAttachContact.on("click", (e) => {
+      console.log("Contact");
     });
   }
 }
