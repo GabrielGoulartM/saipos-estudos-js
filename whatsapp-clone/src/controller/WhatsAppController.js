@@ -217,6 +217,7 @@ class WhatsAppController {
     });
 
     //interação com o botão FECHAR o campo de anexar documento
+
     this.el.btnClosePanelDocumentPreview.on("click", (e) => {
       this.closeAllMainPanel();
       this.el.panelMessagesContainer.show();
@@ -233,6 +234,23 @@ class WhatsAppController {
     this.el.btnCloseModalContacts.on("click", (e) => {
       this.el.modalContacts.hide();
     });
+
+    // Interações com o botão de microfone
+    this.el.btnSendMicrophone.on("click", (e) => {
+      this.el.recordMicrophone.show();
+      this.el.btnSendMicrophone.hide();
+      this.startRecordMicrophoneTime();
+    });
+
+    // Interações com o botão de CANCELAR gravação do microfone
+    this.el.btnCancelMicrophone.on("click", (e) => {
+      this.closeRecordMicrophone();
+    });
+
+    // Interações com o botão de ENVIAR gravação do microfone
+    this.el.btnFinishMicrophone.on("click", (e) => {
+      this.closeRecordMicrophone();
+    });
   }
 
   //Método para fechar todos os paineis do botão de attechment
@@ -240,5 +258,19 @@ class WhatsAppController {
     this.el.panelMessagesContainer.hide();
     this.el.panelDocumentPreview.removeClass("open");
     this.el.panelCamera.removeClass("open");
+  }
+
+  closeRecordMicrophone() {
+    this.el.recordMicrophone.hide();
+    this.el.btnSendMicrophone.show();
+    clearInterval(this._recordMicrophoneInterval);
+  }
+
+  startRecordMicrophoneTime() {
+    let start = Date.now();
+
+    this._recordMicrophoneInterval = setInterval(() => {
+      this.el.recordMicrophoneTimer.innerHTML = Date.now() - start;
+    }, 100);
   }
 }
