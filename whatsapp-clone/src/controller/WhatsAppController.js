@@ -147,6 +147,7 @@ class WhatsAppController {
     });
 
     //Evento de click no botão de confirmar editar nome de perfil
+
     this.el.btnSavePanelEditProfile.on("click", (e) => {
       console.log(this.el.inputNamePanelEditProfile.innerHTML); // printa o valor dentro do elemento HTML
     });
@@ -162,7 +163,6 @@ class WhatsAppController {
       // procura dentro de contactsMessagesLista os itens que tenham a classe CSS correspondente
       item.on("click", (e) => {
         // para cada item com a classe contact-item, atribui o evento click
-
         this.el.home.hide(); // Ao clicar, o home é ocultado
 
         this.el.main.css({
@@ -191,7 +191,7 @@ class WhatsAppController {
     });
 
     this.el.btnAttachCamera.on("click", (e) => {
-      this.el.panelMessagesContainer.hide();
+      this.closeAllMainPanel();
       this.el.panelCamera.addClass("open");
       this.el.panelCamera.css({
         height: "calc(100% - 120px)",
@@ -203,12 +203,42 @@ class WhatsAppController {
       this.el.panelMessagesContainer.show();
     });
 
+    this.el.btnTakePicture.on("click", (e) => {
+      console.log("foto tirada");
+    });
+
+    //interações com o botão de anexar documento
     this.el.btnAttachDocument.on("click", (e) => {
-      console.log("Document");
+      this.closeAllMainPanel();
+      this.el.panelDocumentPreview.addClass("open");
+      this.el.panelDocumentPreview.css({
+        height: "calc(100% - 120px)",
+      });
+    });
+
+    //interação com o botão FECHAR o campo de anexar documento
+    this.el.btnClosePanelDocumentPreview.on("click", (e) => {
+      this.closeAllMainPanel();
+      this.el.panelMessagesContainer.show();
+    });
+
+    this.el.btnSendDocument.on("click", (e) => {
+      console.log("DOCUMENTO ENVIADO");
     });
 
     this.el.btnAttachContact.on("click", (e) => {
-      console.log("Contact");
+      this.el.modalContacts.show();
     });
+
+    this.el.btnCloseModalContacts.on("click", (e) => {
+      this.el.modalContacts.hide();
+    });
+  }
+
+  //Método para fechar todos os paineis do botão de attechment
+  closeAllMainPanel() {
+    this.el.panelMessagesContainer.hide();
+    this.el.panelDocumentPreview.removeClass("open");
+    this.el.panelCamera.removeClass("open");
   }
 }
