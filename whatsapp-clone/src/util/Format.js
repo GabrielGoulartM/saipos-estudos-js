@@ -1,4 +1,4 @@
-class Format {
+export class Format {
   static getCamelCase(text) {
     // cria um div "fake"
     let div = document.createElement("div");
