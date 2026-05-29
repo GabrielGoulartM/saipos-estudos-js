@@ -1,14 +1,14 @@
 export class CameraController {
   constructor(videoEl) {
-    this.videoEl = videoEl;
+    this._videoEl = videoEl;
 
     navigator.mediaDevices.getUserMedia({
       video: true
     }).then(stream => { 
       // A partir de stream, acessamos os elementos que estão sendo enviados (video, audio, etc)
       this._stream = stream;
-      this.videoEl.srcObject = stream;
-      this.videoEl.play();
+      this._videoEl.srcObject = stream;
+      this._videoEl.play();
 
     }).catch(err => {
       console.error(err);
@@ -24,4 +24,21 @@ export class CameraController {
       });
     }
   }
+
+  takePicture(mimeType = 'image/png'){
+  let canvas = document.createElement('canvas');
+
+  canvas.setAttribute('height', this._videoEl.videoHeight);
+  canvas.setAttribute('width', this._videoEl.videoWidth);
+
+
+  let context = canvas.getContext('2d');
+
+  context.drawImage(this._videoEl, 0, 0, canvas.width, canvas.height);
+
+  return canvas.toDataURL(mimeType);
+
 }
+}
+
+

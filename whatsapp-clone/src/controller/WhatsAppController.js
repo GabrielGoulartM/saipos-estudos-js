@@ -215,7 +215,26 @@ export class WhatsAppController {
 
     this.el.btnTakePicture.on("click", (e) => {
       console.log("foto tirada");
+      let dataUrl = this._camera.takePicture();
+
+      this.el.pictureCamera.src = dataUrl;
+      this.el.pictureCamera.show();
+      this.el.videoCamera.hide();
+      this.el.btnReshootPanelCamera.show();
+      this.el.btnTakePicture.hide();
+      this.el.containerSendPicture.show();
+
     });
+
+
+    this.el.btnReshootPanelCamera.on('click', e => { // <-- Faltou o .on aqui!
+    this.el.pictureCamera.hide();
+    this.el.videoCamera.show();
+    this.el.btnReshootPanelCamera.hide();
+    this.el.containerTakePicture.show();
+    this.el.containerSendPicture.hide();
+});
+    
 
     //interações com o botão de anexar documento
     this.el.btnAttachDocument.on("click", (e) => {
@@ -335,6 +354,7 @@ export class WhatsAppController {
     this.el.panelCamera.removeClass("open");
   }
 
+  
   closeRecordMicrophone() {
     this.el.recordMicrophone.hide();
     this.el.btnSendMicrophone.show();
