@@ -1,4 +1,5 @@
 import { CameraController } from './CameraController.js';
+import { DocumentPreviewController } from './DocumentPreviewController.js';
 import { Format } from '../util/Format.js';
 
 
@@ -234,6 +235,13 @@ export class WhatsAppController {
     this.el.containerTakePicture.show();
     this.el.containerSendPicture.hide();
 });
+
+
+
+
+this.el.btnSendPicture.on('click', e=>{
+  console.log(this.el.pictureCamera.src);
+})
     
 
     //interações com o botão de anexar documento
@@ -243,7 +251,44 @@ export class WhatsAppController {
       this.el.panelDocumentPreview.css({
         height: "calc(100% - 120px)",
       });
+      this.el.inputDocument.click();
+
     });
+
+    this.el.inputDocument.on('change', e=>{
+     
+      if (this.el.inputDocument.files.length){
+      let file = this.el.inputDocument.files[0];
+
+      this._documentPreviewController = new DocumentPreviewController(file);
+        
+      this._documentPreviewController.getPreviewData().then(result=>{
+
+        this.el.imgPanelDocumentPreview.src = result.src;
+        this.el.infoPanelDocumentPreview.innerHTML = result.info;
+        this.el.imagePanelDocumentPreview.show();
+        this.el.filePanelDocumentPreview.hide();
+
+
+      }).catch(err=>{
+        switch (file.type){
+
+          case 'application/vnd.ms-execel':
+          case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+
+          break;
+
+          default:
+            
+            break;
+        }
+      })
+    
+    }
+    })
+
+
+
 
     //interação com o botão FECHAR o campo de anexar documento
 

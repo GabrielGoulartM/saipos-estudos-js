@@ -121,7 +121,7 @@ class CalcController{
         document.addEventListener('paste', e=>{
             let text = e.clipboardData.getData('Text');
             this.displayCalc = parseFloat(text);
-            onsole.log(text);
+            console.log(text);
         })
     }
 
@@ -223,7 +223,7 @@ class CalcController{
     addDot(){
         let LastOperation = this.getLastOperation(); 
 
-        if(typeof LastOperation === 'string' && LastOperation.split('').indexof('.') > -1);
+        if(typeof LastOperation === 'string' && LastOperation.split('').indexOf('.') > -1) return;
 
         if(this.isOperator(LastOperation)|| !LastOperation){ // Se LastOperation for um operador, OU, é undefined
             this.pushOperation('0.');
