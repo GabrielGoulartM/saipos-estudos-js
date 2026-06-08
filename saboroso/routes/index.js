@@ -1,6 +1,7 @@
 var conn = require('./../inc/db');
 var express = require('express');
 var router = express.Router();
+var reservations = require('./../inc/reservations');
 
 /* ================================
    ROTA: HOME (Página Inicial)
@@ -55,7 +56,6 @@ router.get('/menus', function(req, res, next) {
    ROTA: CONTATOS (Contacts)
    ================================ */
 router.get('/contacts', function(req, res, next) {
-    // Renderiza o arquivo views/contact.ejs
     res.render('contacts', {
         title: 'Contato - Restaurante Saboroso!',
         background: '/images/img_bg_3.jpg',
@@ -68,28 +68,49 @@ router.get('/contacts', function(req, res, next) {
    ROTA: RESERVAS (Reservations)
    ================================ */
 router.get('/reservations', function(req, res, next) {
-    // Renderiza o arquivo views/reservation.ejs
-    res.render('reservations', {
-        title: 'Reservas - Restaurante Saboroso!',
-        background: '/images/img_bg_2.jpg',
-        h1: 'Reserve uma mesa!',
-        isHome: false
-    });
+    // Agora a variável aponta para o nome correto com 'r'
+    reservations.render(req, res);
 });
 
 /* ================================
-   ROTA: RESERVAS (Reservations)
+   ROTA: RESERVAS VIA POST (Reservations via POST)
    ================================ */
 router.post('/reservations', function(req, res, next) {
-    // Renderiza o arquivo views/reservation.ejs
-    res.send('req.body',);
+    
+    if (!req.body.name) {
+        reservations.render(req, res, "Digite o nome");
+    } else if (!req.body.email) {
+        reservations.render(req, res, "Digite o e-mail");
+    } else if (!req.body.people) {
+        reservations.render(req, res, "Selecione o número de pessoas");
+    } else if (!req.body.date) {
+        reservations.render(req, res, "Selecione a data");
+    } else if (!req.body.time) {
+        reservations.render(req, res, "Selecione a hora");
+    } else {
+
+        // Chama o método que salva no MySQL retornando a Promise
+        reservations.save(req.body).then(results => {
+            
+            // CORRIGIDO: Se salvou com sucesso, limpa o formulário e manda a mensagem verde
+            req.body = {}; // Limpa os campos para o formulário não vir preenchido
+            reservations.render(req, res, null, "Reserva realizada com sucesso!");
+
+        }).catch(err => {
+            
+            // CORRIGIDO: Se o banco falhar, devolve o erro para a tela
+            reservations.render(req, res, err.message);
+
+        }); 
+
+    }
+
 });
 
 /* ================================
    ROTA: SERVIÇOS (Services)
    ================================ */
 router.get('/services', function(req, res, next) {
-    // Renderiza o arquivo views/services.ejs
     res.render('services', {
         title: 'Serviços - Restaurante Saboroso!',
         background: '/images/img_bg_1.jpg',

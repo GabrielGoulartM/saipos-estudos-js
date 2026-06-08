@@ -1,20 +1,34 @@
 <div class="gtco-section" style="padding-bottom: 14em;">
-		<div class="gtco-container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="col-md-6 animate-box">
-					<h3>Reserva de mesa</h3>
+    <div class="gtco-container">
+        <div class="row">
+            <div class="col-md-12">
+                
+                <div class="col-md-6 animate-box">
+
+                    <% if (typeof error === 'string') { %>
+                    <div class="alert alert-danger">   
+                    <%= error %>
+                    </div>
+                    <% } %>
+
+                    <% if (typeof success === 'string') { %>
+                    <div class="alert alert-success">
+                    <%= success %>
+                    </div>
+                    <% } %>
+
+                    <h3>Reserva de mesa</h3>
                     <form action="/reservations" method="post">
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <label for="inputName">Nome</label>
-                                <input type="text" id="inputName" name="name" class="form-control">
+                                <input type="text" id="inputName" name="name" value="<%= body ? body.name : '' %>" class="form-control">
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <label for="inputEmail">E-mail</label>
-                                <input type="email" id="inputEmail" name="email" class="form-control">
+                                <input type="email" id="inputEmail" name="email" value="<%= body ? body.email : '' %>" class="form-control">
                             </div>
                         </div>
                         <div class="row form-group">
@@ -22,24 +36,24 @@
                                 <label for="inputPeople">Pessoas</label>
                                 <select id="inputPeople" name="people" class="form-control">
                                     <option value=""> -- selecione -- </option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5+</option>
+                                    <option value="1" <%= (body && body.people === '1') ? 'selected' : '' %>>1</option>
+                                    <option value="2" <%= (body && body.people === '2') ? 'selected' : '' %>>2</option>
+                                    <option value="3" <%= (body && body.people === '3') ? 'selected' : '' %>>3</option>
+                                    <option value="4" <%= (body && body.people === '4') ? 'selected' : '' %>>4</option>
+                                    <option value="5" <%= (body && body.people === '5') ? 'selected' : '' %>>5+</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <label for="inputDate">Data</label>
-                                <input type="text" id="inputDate" name="date" class="form-control">
+                                <input type="text" id="inputDate" name="date" value="<%= body ? body.date : '' %>" class="form-control">
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <label for="inputTime">Hora</label>
-                                <input type="text" id="inputTime" name="time" class="form-control">
+                                <input type="text" id="inputTime" name="time" value="<%= body ? body.time : '' %>" class="form-control">
                             </div>
                         </div>
                     
@@ -49,22 +63,21 @@
                             </div>
                         </div>
                     </form>
-				</div>
-				<div class="col-md-5 col-md-push-1 animate-box">
-					
-					<div class="gtco-contact-info">
-						<h3>Informações de Contato</h3>
-						<ul>
-							<li class="address">Rua Ademar Saraiva Leão, 234<br> Alvarenga, São Bernardo do Campo - SP</li>
-							<li class="phone"><a href="tel://1234567890">+1 234 567 890</a></li>
-							<li class="email"><a href="mailto:contato@hcode.com.br">contato@hcode.com.br</a></li>
-							<li class="url"><a href="https://www.hcode.com.br">Hcode.com.br</a></li>
-						</ul>
-					</div>
-
-
-				</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                </div> 
+                
+                <div class="col-md-5 col-md-push-1 animate-box">
+                    <div class="gtco-contact-info">
+                        <h3>Informações de Contato</h3>
+                        <ul>
+                            <li class="address">Rua Ademar Saraiva Leão, 234<br> Alvarenga, São Bernardo do Campo - SP</li>
+                            <li class="phone"><a href="tel://1234567890">+1 234 567 890</a></li>
+                            <li class="email"><a href="mailto:contato@hcode.com.br">contato@hcode.com.br</a></li>
+                            <li class="url"><a href="https://www.hcode.com.br">Hcode.com.br</a></li>
+                        </ul>
+                    </div>
+                </div> 
+                
+            </div> 
+        </div> 
+    </div> 
+</div>
