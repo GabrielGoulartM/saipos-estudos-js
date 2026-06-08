@@ -18,7 +18,8 @@ router.get('/', function(req, res, next) {
 
       res.render('index', {
           title: 'Restaurante Saboroso!', 
-          menus: results
+          menus: results,
+          isHome: true
       });
       
     });
@@ -42,7 +43,9 @@ router.get('/menus', function(req, res, next) {
             title: 'Nossos Menus - Restaurante Saboroso!', 
             menus: results,
             background: '/images/img_bg_1.jpg',
-            h1: 'Saboreie nosso menu!'
+            h1: 'Saboreie nosso menu!',
+            isHome: false
+            
         });
       
     });
@@ -55,8 +58,9 @@ router.get('/contacts', function(req, res, next) {
     // Renderiza o arquivo views/contact.ejs
     res.render('contacts', {
         title: 'Contato - Restaurante Saboroso!',
-        background: 'images/img_bg_3.jpg',
-        h1: 'diga um oi'
+        background: '/images/img_bg_3.jpg',
+        h1: 'diga um oi',
+        isHome: false
     });
 });
 
@@ -67,9 +71,18 @@ router.get('/reservations', function(req, res, next) {
     // Renderiza o arquivo views/reservation.ejs
     res.render('reservations', {
         title: 'Reservas - Restaurante Saboroso!',
-        background: 'images/img_bg_2.jpg',
-        h1: 'Reserve uma mesa!'
+        background: '/images/img_bg_2.jpg',
+        h1: 'Reserve uma mesa!',
+        isHome: false
     });
+});
+
+/* ================================
+   ROTA: RESERVAS (Reservations)
+   ================================ */
+router.post('/reservations', function(req, res, next) {
+    // Renderiza o arquivo views/reservation.ejs
+    res.send('req.body',);
 });
 
 /* ================================
@@ -79,8 +92,9 @@ router.get('/services', function(req, res, next) {
     // Renderiza o arquivo views/services.ejs
     res.render('services', {
         title: 'Serviços - Restaurante Saboroso!',
-         background: 'images/img_bg_1.jpg',
-        h1: 'Um prazer poder servir'
+        background: '/images/img_bg_1.jpg',
+        h1: 'Um prazer poder servir',
+        isHome: false
     });
 });
 
