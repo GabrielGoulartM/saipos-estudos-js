@@ -2,6 +2,7 @@ var conn = require('./../inc/db');
 var express = require('express');
 var router = express.Router();
 var reservations = require('./../inc/reservations');
+var contacts = require('./../inc/contacts');
 
 /* ================================
    ROTA: HOME (Página Inicial)
@@ -56,12 +57,35 @@ router.get('/menus', function(req, res, next) {
    ROTA: CONTATOS (Contacts)
    ================================ */
 router.get('/contacts', function(req, res, next) {
-    res.render('contacts', {
-        title: 'Contato - Restaurante Saboroso!',
-        background: '/images/img_bg_3.jpg',
-        h1: 'diga um oi',
-        isHome: false
-    });
+    contacts.render(req, res);
+});
+
+router.post('/contacts', function(req, res, next) {
+    
+    if (!req.body.name) {
+        contacts.render(req, res, "Digite o nome");
+    } else if (!req.body.email) {
+        contacts.render(req, res, "Digite o e-mail");
+    } else if (!req.body.message) {
+        contacts.render(req, res, "Digite a mensagem");
+    } else {
+        
+        // Chama o método que salva no MySQL retornando a Promise
+        contacts.save(req.body).then(results => {  
+
+            // CORRIGIDO: Nome da variável ajustado para contacts e limpando o form no sucesso
+            req.body = {}; 
+            contacts.render(req, res, null, "Contato enviado com sucesso!");
+
+        }).catch(err => {
+
+            // CORRIGIDO: Fechamento do bloco catch tratando o erro do banco de dados
+            contacts.render(req, res, err.message);
+
+        }); // <-- Parênteses e chaves do .then().catch() fechados aqui
+
+    }
+
 });
 
 /* ================================
@@ -92,13 +116,13 @@ router.post('/reservations', function(req, res, next) {
         // Chama o método que salva no MySQL retornando a Promise
         reservations.save(req.body).then(results => {
             
-            // CORRIGIDO: Se salvou com sucesso, limpa o formulário e manda a mensagem verde
+            //Se salvou com sucesso, limpa o formulário e manda a mensagem verde
             req.body = {}; // Limpa os campos para o formulário não vir preenchido
             reservations.render(req, res, null, "Reserva realizada com sucesso!");
 
         }).catch(err => {
             
-            // CORRIGIDO: Se o banco falhar, devolve o erro para a tela
+            // Se o banco falhar, devolve o erro para a tela
             reservations.render(req, res, err.message);
 
         }); 
