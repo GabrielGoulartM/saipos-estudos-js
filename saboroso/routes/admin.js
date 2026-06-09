@@ -66,9 +66,24 @@ router.post("/login", function(req, res, next) {
    ======================================================== */
 
 /* Dashboard Principal */
-router.get('/', function(req, res, next) {
-    // Como não precisa de dados extras, basta passar o req
-    res.render('admin/index', admin.getParams(req));
+
+
+router.get('/', async function(req, res, next) {
+
+    try {
+        // 2. BUSCA OS DADOS DO BANCO (dashboard retorna a Promise)
+        const dashboardData = await admin.dashboard();
+
+        // 3. PASSA OS DADOS dentro do segundo parâmetro do getParams
+        res.render('admin/index', admin.getParams(req, {
+            data: dashboardData
+        }));
+
+    } catch (err) {
+        // Se houver algum erro no banco de dados, joga para a tela de erro do Express
+        next(err);
+    }
+
 });
 
 /* Gerenciamento de Contatos */
