@@ -18,6 +18,10 @@ router.use(function(req, res, next) {
         return res.redirect('/admin/login');
     }
 
+    // ADICIONADO: Alimenta o req.menus antes de ir para as rotas
+    // Isso é o que permite o admin.getParams(req) ler os menus automaticamente!
+    req.menus = admin.getMenus(req);
+
     // Usuário autenticado, segue para a rota desejada
     next();
 });
@@ -28,7 +32,6 @@ router.use(function(req, res, next) {
 
 /* Tela de Login (GET) */
 router.get('/login', function(req, res, next) {
-    // CORRIGIDO: Removida a linha solta que quebrava a sintaxe. O login não usa menu lateral.
     users.render(req, res, null);
 });
 
@@ -64,49 +67,41 @@ router.post("/login", function(req, res, next) {
 
 /* Dashboard Principal */
 router.get('/', function(req, res, next) {
-    // CORRIGIDO: Agora a Home também passa os menus dinâmicos para o header.ejs
-    res.render('admin/index', {
-        menus: admin.getMenus(req)
-    });
+    // Como não precisa de dados extras, basta passar o req
+    res.render('admin/index', admin.getParams(req));
 });
 
 /* Gerenciamento de Contatos */
 router.get('/contacts', function(req, res, next) {
-    res.render('admin/contacts', {
-        menus: admin.getMenus(req)
-    });
+    // menus e user injetados de forma limpa automaticamente!
+    res.render('admin/contacts', admin.getParams(req));
 });
 
 /* Lista de E-mails / Newsletter */
 router.get('/emails', function(req, res, next) {
-    res.render('admin/emails', {
-        menus: admin.getMenus(req)
-    });
+    res.render('admin/emails', admin.getParams(req));
 });
 
 /* Controle do Cardápio */
 router.get('/menus', function(req, res, next) {
-    res.render('admin/menus', {
-        menus: admin.getMenus(req)
-    });
+    res.render('admin/menus', admin.getParams(req));
 });
 
 /* Gestão de Reservas */
 router.get('/reservations', function(req, res, next) {
-    res.render('admin/reservations', {
-        menus: admin.getMenus(req), 
-        date: {                     //Passando o objeto que o EJS está cobrando
+    // Como essa rota precisa do objeto "date" específico dela, 
+    // passamos ele como segundo parâmetro e o Object.assign junta tudo!
+    res.render('admin/reservations', admin.getParams(req, {
+        date: {
             start: '',
             end: ''
         }
-    });
+    }));
 });
 
 /* Controle de Usuários / Admins */
 router.get('/users', function(req, res, next) {
-    res.render('admin/users', {
-        menus: admin.getMenus(req)
-    });
+    res.render('admin/users', admin.getParams(req));
 });
 
 module.exports = router;

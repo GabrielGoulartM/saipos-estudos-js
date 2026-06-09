@@ -1,0 +1,31 @@
+</div>
+    <footer class="main-footer">
+      <div class="pull-right hidden-xs">
+        <a target="_blank" href="https://www.hcode.com.br">Hcode</a>
+      </div>
+      Projeto desenvolvido no curso online de JavaScript da Hcode Treinamentos.
+    </footer>
+
+  </div>
+  <script src="/admin/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/admin/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/admin/bower_components/PACE/pace.min.js"></script>
+  <script src="/admin/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+  <script src="/admin/bower_components/fastclick/lib/fastclick.js"></script>
+  <script src="/admin/dist/js/adminlte.min.js"></script>
+  <script src="/admin/dist/js/demo.js"></script>
+  
+  <script type="text/javascript">
+    $(document).ajaxStart(function () {
+      Pace.restart()
+    })
+    $('.ajax').click(function () {
+      $.ajax({
+        url: '#', success: function (result) {
+          $('.ajax-content').html('<hr>Ajax Request Completed !')
+        }
+      })
+    })
+  </script>
+</body>
+</html>

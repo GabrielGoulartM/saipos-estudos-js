@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// 1. IMPORTANTE: Pacotes para a Sessão com Redis
+// Pacotes para a Sessão com Redis
 var session = require('express-session');
 var { RedisStore } = require('connect-redis');
 var { createClient } = require('redis');
@@ -14,7 +14,7 @@ var adminRouter = require('./routes/admin');
 
 var app = express();
 
-// 2. CONFIGURAÇÃO DO REDIS: Cria o cliente e conecta
+//  Cria o cliente e conecta
 const redisClient = createClient();
 redisClient.connect().catch(console.error);
 
@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 3. MIDDLEWARE DE SESSÃO: Ativa o Redis no Express
+//  Ativa o Redis no Express
 app.use(session({
     store: redisStore,
     secret: 'senha-secreta-do-restaurante', // Chave para criptografar o cookie
@@ -43,7 +43,7 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 } // Sessão dura 1 hora
 }));
 
-// 4. TESTE DO CONTADOR: Middleware específico para a rota /admin/login
+// 4Middleware específico para a rota /admin/login
 app.use('/admin/login', function(req, res, next) {
     // Se não existir o contador na sessão, começa com 0
     if (!req.session.views) {
