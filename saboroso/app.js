@@ -4,10 +4,25 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// 1. IMPORTANTE: Pacotes para a Sessão com Redis
+var session = require('express-session');
+var { RedisStore } = require('connect-redis');
+var { createClient } = require('redis');
+
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
 var app = express();
+
+// 2. CONFIGURAÇÃO DO REDIS: Cria o cliente e conecta
+const redisClient = createClient();
+redisClient.connect().catch(console.error);
+
+// Initialize store.
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "saboroso:", // Tag para organizar as chaves no Redis
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,6 +34,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 3. MIDDLEWARE DE SESSÃO: Ativa o Redis no Express
+app.use(session({
+    store: redisStore,
+    secret: 'senha-secreta-do-restaurante', // Chave para criptografar o cookie
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 } // Sessão dura 1 hora
+}));
+
+// 4. TESTE DO CONTADOR: Middleware específico para a rota /admin/login
+app.use('/admin/login', function(req, res, next) {
+    // Se não existir o contador na sessão, começa com 0
+    if (!req.session.views) {
+        req.session.views = 0;
+    }
+    
+    // Incrementa +1 a cada F5
+    req.session.views++;
+    
+    // Mostra no terminal do VS Code para você ver funcionando
+    console.log(`[REDIS TEST] Você acessou a tela de login ${req.session.views} vezes nesta sessão!`);
+    
+    next(); // Passa o bastão para a rota real carregar o HTML
+});
+
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 
@@ -29,11 +69,9 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
