@@ -1,5 +1,6 @@
 var express = require('express');
 var users = require('../inc/users');
+var admin = require('../inc/admin'); 
 var router = express.Router();
 
 /* ========================================================
@@ -27,6 +28,7 @@ router.use(function(req, res, next) {
 
 /* Tela de Login (GET) */
 router.get('/login', function(req, res, next) {
+    // CORRIGIDO: Removida a linha solta que quebrava a sintaxe. O login não usa menu lateral.
     users.render(req, res, null);
 });
 
@@ -62,43 +64,48 @@ router.post("/login", function(req, res, next) {
 
 /* Dashboard Principal */
 router.get('/', function(req, res, next) {
+    // CORRIGIDO: Agora a Home também passa os menus dinâmicos para o header.ejs
     res.render('admin/index', {
-        // dados gerais do sistema
+        menus: admin.getMenus(req)
     });
 });
 
 /* Gerenciamento de Contatos */
 router.get('/contacts', function(req, res, next) {
     res.render('admin/contacts', {
-        // listagem de mensagens recebidas
+        menus: admin.getMenus(req)
     });
 });
 
 /* Lista de E-mails / Newsletter */
 router.get('/emails', function(req, res, next) {
     res.render('admin/emails', {
-        // leads cadastrados
+        menus: admin.getMenus(req)
     });
 });
 
 /* Controle do Cardápio */
 router.get('/menus', function(req, res, next) {
     res.render('admin/menus', {
-        // pratos e valores cadastrados
+        menus: admin.getMenus(req)
     });
 });
 
 /* Gestão de Reservas */
 router.get('/reservations', function(req, res, next) {
     res.render('admin/reservations', {
-        // controle de mesas ocupadas
+        menus: admin.getMenus(req), 
+        date: {                     //Passando o objeto que o EJS está cobrando
+            start: '',
+            end: ''
+        }
     });
 });
 
 /* Controle de Usuários / Admins */
 router.get('/users', function(req, res, next) {
     res.render('admin/users', {
-        // permissões de acesso
+        menus: admin.getMenus(req)
     });
 });
 
