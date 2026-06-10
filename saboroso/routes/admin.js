@@ -2,6 +2,7 @@ var express = require('express');
 var users = require('../inc/users');
 var admin = require('../inc/admin'); 
 var router = express.Router();
+var menus = require('../inc/menus'); // Importa o módulo de menus para usar na middleware
 
 /* ========================================================
    MIDDLEWARE A NÍVEL DE ROTEADOR (Controle de Acesso)
@@ -99,8 +100,16 @@ router.get('/emails', function(req, res, next) {
 
 /* Controle do Cardápio */
 router.get('/menus', function(req, res, next) {
-    res.render('admin/menus', admin.getParams(req));
-});
+    
+    menus.getMenus().then(results => {          
+        res.render('admin/menus', admin.getParams(req, {
+            data: results // Injeta a lista de pratos do banco no template!
+        }));
+    }).catch(err => {
+        next(err); // Trata o erro caso o banco falhe
+    });
+
+}); // <-- CORRIGIDO: Agora fecha o .then e a rota do Express corretamente!
 
 /* Gestão de Reservas */
 router.get('/reservations', function(req, res, next) {
