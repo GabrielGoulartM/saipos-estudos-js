@@ -19,8 +19,7 @@ router.use(function(req, res, next) {
         return res.redirect('/admin/login');
     }
 
-    // ADICIONADO: Alimenta o req.menus antes de ir para as rotas
-    // Isso é o que permite o admin.getParams(req) ler os menus automaticamente!
+   
     req.menus = admin.getMenus(req);
 
     // Usuário autenticado, segue para a rota desejada
@@ -109,7 +108,12 @@ router.get('/menus', function(req, res, next) {
         next(err); // Trata o erro caso o banco falhe
     });
 
-}); // <-- CORRIGIDO: Agora fecha o .then e a rota do Express corretamente!
+}); // <-- fecha o .then e a rota do Express corretamente!
+
+router.post('/menus', function(req, res, next) {
+    res.send(req.body); // Apenas para teste por ora
+}); // <-- CORRIGIDO: Adicionado o ");" para fechar a rota!
+
 
 /* Gestão de Reservas */
 router.get('/reservations', function(req, res, next) {
@@ -121,7 +125,7 @@ router.get('/reservations', function(req, res, next) {
             end: ''
         }
     }));
-});
+})
 
 /* Controle de Usuários / Admins */
 router.get('/users', function(req, res, next) {

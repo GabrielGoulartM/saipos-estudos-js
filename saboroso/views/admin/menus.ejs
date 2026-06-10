@@ -133,4 +133,41 @@
       </div>
     </div>
 
-<%- include('inc/footer') -%>
+    
+
+<script> 
+  let formCreate = document.querySelector('#modal-create form');
+
+  formCreate.addEventListener('submit', function(e){
+    
+    // 1. Impede a página de recarregar
+    e.preventDefault(); 
+    
+    // 2. Captura os dados exatamente no momento do envio (incluindo o arquivo de foto)
+    let formCreateData = new FormData(formCreate);
+    
+    // 3. Dispara a requisição AJAX
+    fetch('/admin/menus', {
+      method: 'POST',
+      body: formCreateData
+    })
+    .then(function(response){
+      // Converte a resposta bruta do servidor para um objeto JSON executável
+      return response.json(); 
+    })
+    .then(function(json){
+      console.log("JSON recebido do servidor: ", json);
+      
+      // Se o servidor responder que deu certo, recarrega a página para atualizar a lista
+      if (json.success || !json.error) {
+         window.location.reload();
+      } else {
+         alert("Erro ao salvar: " + (json.error || "Tente novamente."));
+      }
+    })
+    .catch(function(err){
+      console.error("Erro na requisição fetch:", err);
+    });
+
+  });
+</script>
