@@ -1,3 +1,6 @@
+
+
+
 <%- include('inc/header') -%>
 
     <section class="content-header">
@@ -15,9 +18,9 @@
       <div class="box">
         <div class="box-header">
           <h3 class="box-title">Lista</h3>
-          <a href="#" class="btn btn-xs pull-right btn-success" data-toggle="modal" data-target="#modal-create">
+          <button type="button" class="btn btn-xs pull-right btn-success" data-toggle="modal" data-target="#modal-create">
             <i class="fa fa-plus"></i> Novo
-          </a>
+          </button>
         </div>
         <div class="box-body no-padding">
           <table class="table table-striped table-hover">
@@ -59,7 +62,7 @@
     <div class="modal fade" id="modal-create">
       <div class="modal-dialog">
         <div class="modal-content" style="border-top: 3px solid #00a65a;">
-          <form method="post">
+          <form method="post" action="/admin/menus">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -97,7 +100,7 @@
     <div class="modal fade" id="modal-update">
       <div class="modal-dialog">
         <div class="modal-content" style="border-top: 3px solid #00c0ef;">
-          <form method="post">
+          <form method="post" action="/admin/menus">
             <input type="hidden" name="id">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -133,41 +136,27 @@
       </div>
     </div>
 
-    
+<script>
+let formCreate = document.querySelector("#modal-create form");
 
-<script> 
-  let formCreate = document.querySelector('#modal-create form');
+formCreate.addEventListener('submit', e => {
 
-  formCreate.addEventListener('submit', function(e){
-    
-    // 1. Impede a página de recarregar
-    e.preventDefault(); 
-    
-    // 2. Captura os dados exatamente no momento do envio (incluindo o arquivo de foto)
-    let formCreateData = new FormData(formCreate);
-    
-    // 3. Dispara a requisição AJAX
-    fetch('/admin/menus', {
-      method: 'POST',
-      body: formCreateData
-    })
-    .then(function(response){
-      // Converte a resposta bruta do servidor para um objeto JSON executável
-      return response.json(); 
-    })
-    .then(function(json){
-      console.log("JSON recebido do servidor: ", json);
-      
-      // Se o servidor responder que deu certo, recarrega a página para atualizar a lista
-      if (json.success || !json.error) {
-         window.location.reload();
-      } else {
-         alert("Erro ao salvar: " + (json.error || "Tente novamente."));
-      }
-    })
-    .catch(function(err){
-      console.error("Erro na requisição fetch:", err);
-    });
+  e.preventDefault();
+
+  let formCreateData = new FormData(formCreate);
+
+  fetch("/admin/menus", {
+    method: 'POST',
+    body: formCreateData
+  })
+  .then(response => response.json()) // Adicionado o retorno correto como o prof tentou fazer
+  .then(json => {
+
+    //window.location.reload();
 
   });
+
+});
 </script>
+
+<%- include('inc/footer') -%>

@@ -1,4 +1,6 @@
 var express = require('express');
+const formidable = require('formidable');
+const path = require('path');
 var users = require('../inc/users');
 var admin = require('../inc/admin'); 
 var router = express.Router();
@@ -108,12 +110,38 @@ router.get('/menus', function(req, res, next) {
         next(err); // Trata o erro caso o banco falhe
     });
 
-}); // <-- fecha o .then e a rota do Express corretamente!
+}); // <-- fecha o .then e a rota do Express !
 
 router.post('/menus', function(req, res, next) {
-    res.send(req.body); // Apenas para teste por ora
-}); // <-- CORRIGIDO: Adicionado o ");" para fechar a rota!
 
+    // 1. Configura o Formidable para receber a foto e salvar na pasta certa
+    let form = new formidable.IncomingForm({
+        uploadDir: path.join(__dirname, '/../public/images'), // caminho para a pasta de imagens do seu projeto
+        keepExtensions: true // mantém o .jpg ou .png original
+    });
+
+    // 2. Parseia a requisição (separa os textos dos arquivos binários)
+    form.parse(req, function(err, fields, files) {
+
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+       
+            menus.save(fields, files)
+            .then(results => {
+                res.send(results);
+            })
+            .catch(err => {
+                // 👇 ADICIONE ESSA LINHA PARA O ERRO APARECER NO TERMINAL:
+                console.error("❌ ERRO NO BANCO DE DADOS:", err); 
+                
+                res.status(500).send(err);
+            });
+
+    });
+
+});
 
 /* Gestão de Reservas */
 router.get('/reservations', function(req, res, next) {

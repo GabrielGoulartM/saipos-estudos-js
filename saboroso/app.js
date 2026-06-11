@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//Biblio do fomidable
+var formidable = require('formidable');
+var path = require('path');
+
 // Pacotes para a Sessão com Redis
 var session = require('express-session');
 var { RedisStore } = require('connect-redis');
@@ -13,6 +17,30 @@ var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
 var app = express();
+
+
+app.use(function (req, res, next) {
+  if (req.method === 'POST' && req.url === '/admin/prato/salvar') {
+    const form = new formidable.IncomingForm({
+      uploadDir: path.join(__dirname, 'public/images'), // Pasta onde as imagens serão salvas
+      keepExtensions: true // Mantém a extensão original do arquivo
+    });
+
+    form.parse(req, function (err, fields, files) {
+      if (err) {
+        return next(err);
+      }
+
+      req.fields = fields; // Campos do formulário
+      req.files = files;   // Arquivos enviados
+
+      next(); // Passa para a próxima etapa do processamento da requisição
+    });
+  } else {
+    next(); // Para outras rotas, segue normalmente
+  }
+});
+
 
 //  Cria o cliente e conecta
 const redisClient = createClient();
